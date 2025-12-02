@@ -19,6 +19,10 @@ export async function getHashReferences(particularHash) {
       return reject([new Error("Invalid hash format. Expected format: 0xXXXXXXXX"), 400]);
     }
 
+    if (particularHash === "0x00000000") {
+      return reject([new Error("Hash 0x00000000 is not valid for lookup."), 400]);
+    }
+
     // If the per-hash cache already exists, return early to avoid reprocessing.
     if (fs.existsSync(outPath)) {
       try {
