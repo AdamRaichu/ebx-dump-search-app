@@ -21,7 +21,13 @@ export async function getHashReferences(particularHash) {
 
     // If the per-hash cache already exists, return early to avoid reprocessing.
     if (fs.existsSync(outPath)) {
-      return resolve({ message: "Cache exists", path: outPath });
+      try {
+        const data = fs.readFileSync(outPath, { encoding: "utf8" });
+        const lines = data.split(/\r?\n/).filter((l) => l.length > 0);
+        return resolve({ message: "Cache exists", lines });
+      } catch (err) {
+        return reject([new Error("Failed to read per-hash cache: " + err.message), 500]);
+      }
     }
 
     const outStream = fs.createWriteStream(outPath, { flags: "w" });
@@ -43,11 +49,13 @@ export async function getHashReferences(particularHash) {
     const rl = readline.createInterface({ input: readStream, crlfDelay: Infinity });
 
     let found = false;
+    const lines = [];
 
     rl.on("line", (line) => {
       try {
         if (line.includes(String(particularHash))) {
           found = true;
+          lines.push(line);
           outStream.write(line + "\n");
         }
       } catch (e) {
@@ -57,8 +65,8 @@ export async function getHashReferences(particularHash) {
 
     rl.on("close", () => {
       outStream.end();
-      if (found) resolve({ message: "References found", path: outPath });
-      else resolve({ message: "No matches", path: outPath });
+      if (found) resolve({ message: "References found", lines });
+      else resolve({ message: "No matches", lines: [] });
     });
   });
 }

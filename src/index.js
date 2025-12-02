@@ -1,4 +1,5 @@
 import express from "express";
+import compression from "compression";
 import { confirmCachesExit } from "./cacher/index.js";
 const app = express();
 import { spawn } from "child_process";
@@ -6,6 +7,8 @@ import { openSync, closeSync } from "fs";
 import { getHashReferences } from "./cacher/on-demand/particular-hash.js";
 
 const port = process.env.PORT || 3000;
+
+app.use(compression());
 
 console.log("Starting cache confirmation...");
 await confirmCachesExit();
@@ -36,7 +39,7 @@ app.get("/search/:hash", async (req, res) => {
   res.json({
     status: "success",
     message: result.message,
-    cachePath: result.path,
+    lines: result.lines,
   });
 });
 
