@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   res.send("EBX Dump Search API");
 });
 
-app.get("/search/:hash", async (req, res) => {
+app.get("/search/hash/:hash", async (req, res) => {
   const particularHash = req.params.hash;
   const result = await getHashReferences(particularHash).catch((errStatusPair) => {
     res.status(errStatusPair[1]).json({
