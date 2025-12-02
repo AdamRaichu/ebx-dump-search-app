@@ -1,0 +1,43 @@
+/* */
+body {
+  background-color: #1f2227;
+  color: white;
+  margin: 0;
+}
+
+.banner {
+  background-color: #282c34;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  border-bottom: 2px solid #444851;
+  margin-bottom: 100px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.tools-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.tool-widget {
+  background-color: #2c2f36;
+  border: 1px solid #444851;
+  border-radius: 8px;
+  padding: 15px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.tool-widget:hover {
+  transform: translateY(-5px);
+}
