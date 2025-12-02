@@ -23,9 +23,14 @@ export async function createCache() {
     // Pipe stdout to the output file
     if (child.stdout) child.stdout.pipe(outStream);
 
-    let stderr = "";
+    // Keep only a small tail of stderr to avoid unbounded memory usage
+    let stderrBuf = "";
+    const STDERR_MAX = 1024; // characters
     if (child.stderr) {
-      child.stderr.on("data", (c) => (stderr += c.toString()));
+      child.stderr.on("data", (c) => {
+        stderrBuf += c.toString();
+        if (stderrBuf.length > STDERR_MAX) stderrBuf = stderrBuf.slice(-STDERR_MAX);
+      });
     }
 
     child.on("close", (code, signal) => {
@@ -38,7 +43,8 @@ export async function createCache() {
       } else if (code === null && signal) {
         reject(new Error(`git grep terminated with signal ${signal}`));
       } else {
-        reject(new Error(`Cache creation failed with exit code ${code}. ${stderr}`));
+        // include only the capped stderr tail in the error
+        reject(new Error(`Cache creation failed with exit code ${code}. ${stderrBuf}`));
       }
     });
   });

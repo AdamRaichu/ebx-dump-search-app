@@ -1,17 +1,65 @@
 import * as path from "path";
 import * as fs from "fs";
+import * as readline from "readline";
 import { cacheName as allHashesCacheName } from "../all-hash-list.js";
 
 const cacheDir = path.join(process.cwd(), "caches", "particular_hashes");
 
 export async function getHashReferences(particularHash) {
   ensureCacheDir();
-  const outPath = path.join(cacheDir, `hash_${particularHash}.txt`);
+
+  console.log(`Getting references for hash: ${particularHash}`);
+
+  // Sanitize the particularHash for use in filenames
+  const safeName = String(particularHash).replace(/[^a-zA-Z0-9_-]/g, "_");
+  const outPath = path.join(cacheDir, `hash_${safeName}.txt`);
 
   return new Promise((resolve, reject) => {
+    if (safeName.match(/^0x[0-9a-fA-F]{8}$/) === null) {
+      return reject([new Error("Invalid hash format. Expected format: 0xXXXXXXXX"), 400]);
+    }
+
+    // If the per-hash cache already exists, return early to avoid reprocessing.
+    if (fs.existsSync(outPath)) {
+      return resolve({ message: "Cache exists", path: outPath });
+    }
+
     const outStream = fs.createWriteStream(outPath, { flags: "w" });
 
-    // const cacheLines = fs.readFileSync(path.join(process.cwd(), "caches", allHashesCacheName), "utf-8").split("\n");
+    const cachePath = path.join(process.cwd(), "caches", allHashesCacheName);
+    if (!fs.existsSync(cachePath)) {
+      outStream.end();
+      return reject([new Error(`All-hashes cache not found at ${cachePath}. Run createCache() first.`), 500]);
+    }
+
+    const readStream = fs.createReadStream(cachePath, { encoding: "utf8" });
+    readStream.on("error", (err) => {
+      try {
+        outStream.close();
+      } catch (e) {}
+      return reject([new Error("Failed to read all-hashes cache: " + err.message), 500]);
+    });
+
+    const rl = readline.createInterface({ input: readStream, crlfDelay: Infinity });
+
+    let found = false;
+
+    rl.on("line", (line) => {
+      try {
+        if (line.includes(String(particularHash))) {
+          found = true;
+          outStream.write(line + "\n");
+        }
+      } catch (e) {
+        // ignore malformed lines
+      }
+    });
+
+    rl.on("close", () => {
+      outStream.end();
+      if (found) resolve({ message: "References found", path: outPath });
+      else resolve({ message: "No matches", path: outPath });
+    });
   });
 }
 
