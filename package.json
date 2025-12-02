@@ -1,0 +1,14 @@
+{
+  "name": "ebx-dump-search-backend",
+  "version": "0.0.0",
+  "description": "WIP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"no tests\""
+  },
+  "author": "AdamRaichu",
+  "license": "MIT",
+  "dependencies": {
+    "st": "^3.0.3"
+  }
+}
