@@ -4,11 +4,14 @@
   "description": "WIP",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js --trace-uncaught",
+    "dev": "nodemon src/index.js",
     "test": "echo \"no tests\""
   },
   "author": "AdamRaichu",
   "license": "MIT",
+  "type": "module",
   "dependencies": {
-    "st": "^3.0.3"
+    "express": "^5.2.1"
   }
 }
