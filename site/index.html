@@ -7,6 +7,7 @@
   <title>BF2 Ebx Dump Search</title>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+  <script src="api.js" defer></script>
   <script src="main.js" defer></script>
 </head>
 
@@ -20,13 +21,27 @@
     </noscript>
   </div>
   <h2>Tool Selector</h2>
+  <p>Click a tool to show it below.</p>
   <div class="tools-container">
     <div class="tool-widget" id="search-for-hash">
       <h3>Search for Hash</h3>
       <p>Search for all occurrences a 0x12345678 pattern</p>
     </div>
   </div>
-  <h2></h2>
+  <hr>
+  <div id="search-for-hash-container" class="tool-container hidden">
+    <div class="tool-slider"> <!-- The "Card" Mechanism (No Padding) -->
+      <div class="tool-content"> <!-- The Design (Has Padding) -->
+        <h2>Search for Hash</h2>
+        <div class="tool-widget" id="search-for-hash-widget">
+          <label for="hash-input">Enter Hash (0xXXXXXXXX): </label>
+          <input type="text" id="hash-input" name="hash-input" placeholder="0x12345678">
+          <button id="search-hash-button">Search</button>
+          <div id="search-hash-results"><i>Your results will appear here.</i></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

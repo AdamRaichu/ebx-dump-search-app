@@ -1,5 +1,6 @@
 import express from "express";
 import compression from "compression";
+import cors from "cors";
 import { confirmCachesExit } from "./cacher/index.js";
 const app = express();
 import { spawn } from "child_process";
@@ -9,6 +10,7 @@ import { getHashReferences } from "./cacher/on-demand/particular-hash.js";
 const port = process.env.PORT || 3000;
 
 app.use(compression());
+app.use(cors());
 
 console.log("Starting cache confirmation...");
 await confirmCachesExit();
