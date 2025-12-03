@@ -11,8 +11,8 @@ searchHashButton.addEventListener("click", () => {
   resultsContainer.innerHTML = "Searching...";
   searchParticularHash(hashInput)
     .then((data) => {
-      if (data.results && data.results.length > 0) {
-        resultsContainer.innerHTML = `<h3>Results:</h3><ul>${data.results.map((result) => `<li>${result}</li>`).join("")}</ul>`;
+      if (data.lines && data.lines.length > 0) {
+        resultsContainer.innerHTML = `<h3>Results:</h3><ul>${data.lines.map((result) => `<li>${result}</li>`).join("")}</ul>`;
       } else {
         resultsContainer.innerHTML = "No results found.";
       }
