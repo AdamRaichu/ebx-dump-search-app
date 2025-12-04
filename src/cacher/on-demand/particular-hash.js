@@ -5,8 +5,16 @@ import { cacheName as allHashesCacheName } from "../all-hash-list.js";
 
 const cacheDir = path.join(process.cwd(), "caches", "particular_hashes");
 
+/**
+ * Get all references to a particular hash from the all-hashes cache.
+ * @param {string} particularHash The hash to look for (format: 0xXXXXXXXX).
+ * @returns {Promise<{message: string, lines: string[]}>} Resolves with found lines or cache status.
+ * @throws {Array} Rejects with [Error, statusCode] on failure.
+ */
 export async function getHashReferences(particularHash) {
   ensureCacheDir();
+
+  particularHash = particularHash.toLowerCase();
 
   console.log(`Getting references for hash: ${particularHash}`);
 
