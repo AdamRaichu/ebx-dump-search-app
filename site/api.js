@@ -1,4 +1,4 @@
-const apiRoot = "http://ebxdump.freemyip.com:3000/";
+const apiRoot = "https://ebxdump.freemyip.com:3000/";
 
 function searchParticularHash(hash) {
   if (!hash.match(/^0x[0-9a-fA-F]{8}$/)) {
