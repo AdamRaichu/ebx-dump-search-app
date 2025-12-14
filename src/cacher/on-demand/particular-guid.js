@@ -27,9 +27,9 @@ export async function getGuidReferences(particularGuid) {
       return reject([new Error("Invalid guid format. Expected format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"), 400]);
     }
 
-    // if (particularGuid === "00000000-0000-0000-0000-000000000000") {
-    //   return reject([new Error("Hash 00000000-0000-0000-0000-000000000000 is not valid for lookup."), 400]);
-    // }
+    if (particularGuid === "00000000-0000-0000-0000-000000000001") {
+      return reject([new Error("Hash 00000000-0000-0000-0000-000000000001 is not valid for lookup."), 400]);
+    }
 
     // If the per-hash cache already exists, return early to avoid reprocessing.
     if (fs.existsSync(outPath)) {
