@@ -1,20 +1,17 @@
-import { spawn } from "child_process";
-import * as fs from "fs";
 import * as path from "path";
+import * as fs from "fs";
+import { spawn } from "child_process";
 
-export const cacheName = "all_hashes.txt";
-
-// TODO: Use gitGrepCache from utils.js here to reduce code duplication.
-export async function createCache() {
+export async function gitGrepCache(regex, outPath, xmlPath) {
   const cacheDir = path.join(process.cwd(), "caches");
   fs.mkdirSync(cacheDir, { recursive: true });
-  const outPath = path.join(cacheDir, cacheName);
+  // const outPath = path.join(cacheDir, cacheName);
 
   return new Promise((resolve, reject) => {
     const outStream = fs.createWriteStream(outPath, { flags: "w" });
 
     // spawn git grep without extra shell quoting; pass the raw regex as an arg
-    const child = spawn("git", ["grep", "-E", "0x[0-9a-f]{8}"], { cwd: path.join(process.cwd(), "full-xml") });
+    const child = spawn("git", ["grep", "-E", regex], { cwd: path.join(process.cwd(), xmlPath) });
 
     child.on("error", (err) => {
       outStream.close();

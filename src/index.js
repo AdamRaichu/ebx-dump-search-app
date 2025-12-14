@@ -6,6 +6,7 @@ const app = express();
 import { spawn } from "child_process";
 import { openSync, closeSync } from "fs";
 import { getHashReferences } from "./cacher/on-demand/particular-hash.js";
+import { getGuidReferences } from "./cacher/on-demand/particular-guid.js";
 
 const port = process.env.PORT || 3000;
 
@@ -36,6 +37,23 @@ app.get("/search/hash/:hash", async (req, res) => {
       message: errStatusPair[0].message,
     });
     if (errStatusPair[1] === 500) console.error("Error getting hash references:", errStatusPair[0]);
+  });
+  if (!result) return; // error already handled above
+  res.json({
+    status: "success",
+    message: result.message,
+    lines: result.lines,
+  });
+});
+
+app.get("/search/guid/:guid", async (req, res) => {
+  const particularGuid = req.params.guid;
+  const result = await getGuidReferences(particularGuid).catch((errStatusPair) => {
+    res.status(errStatusPair[1]).json({
+      status: "error",
+      message: errStatusPair[0].message,
+    });
+    if (errStatusPair[1] === 500) console.error("Error getting guid references:", errStatusPair[0]);
   });
   if (!result) return; // error already handled above
   res.json({
