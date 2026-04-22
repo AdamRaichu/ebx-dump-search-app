@@ -70,6 +70,14 @@ app.get("/search/guid/:guid", async (req, res) => {
   });
 });
 
+app.get("/search/entity/list", async (req, res) => {
+  res.json({
+    status: "success",
+    message: "Listing allowed entities to search for",
+    entities: entityNames.default
+  })
+});
+
 app.get("/search/entity/:entity", async (req, res) => {
   const particularEntityName = req.params.entity;
   const result = await getEntityReferences(particularEntityName).catch((errStatusPair) => {
@@ -85,14 +93,6 @@ app.get("/search/entity/:entity", async (req, res) => {
     message: result.message,
     lines: result.lines,
   });
-});
-
-app.get("/search/entity/list", async (req, res) => {
-  res.json({
-    status: "success",
-    message: "Listing allowed entities to search for",
-    entities: entityNames.default
-  })
 });
 
 app.use((err, req, res, next) => {
